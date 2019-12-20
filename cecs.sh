@@ -168,7 +168,7 @@ setBaseNgCfg
 
 setFeNgCfg
 
-setBeNgCfg
+#setBeNgCfg
 }
 
 # Check Nginx config file and reload

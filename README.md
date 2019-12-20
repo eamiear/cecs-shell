@@ -11,3 +11,11 @@
 5. 自动下载cecs发布包
 6. 自动配置前端nginx配置
 7. 自动配置后端nginx配置
+
+## 使用
+
+```shell
+chmod 777 cecs.sh
+
+./cecs.sh
+```
