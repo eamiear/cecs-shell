@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # B_PREFIX="/usr/local"
-B_PREFIX="/usr/local"
+B_PREFIX="/home/k"
 N_ENV="gcc gcc-c++ zlib zlib-devel pcre pcre-devel openssl openssl-devel"
 N_URL="http://nginx.org/download/nginx-1.15.9.tar.gz"
 N_FILE="nginx-1.15.9.tar.gz"
 N_DIR="nginx-1.15.9"
 N_PATH="nginx1159"
-N_PREFIX="/usr/local/nginx1159"
-N_SSL="/usr/local/nginx1159/conf/ssl"
+N_PREFIX="/home/k/nginx1159"
+N_SSL="/home/k/nginx1159/conf/ssl"
 PROJ_URL="https://github.com/ob-cloud/cecs/releases/download/cecs-v1.0.2/release.tar.gz"
 PROJ_FILE="release.tar.gz"
 PROJ="cecs"
@@ -25,6 +25,9 @@ genSSL() {
     echo " SSL exist"
   else
     echo "[key] Create server key..."
+
+    mkdir -p $N_SSL
+    cd $N_SSL
 
     # openssl genrsa -des3 -out $KEY.key 1024
     openssl genrsa -out ssl.key 2048
@@ -57,6 +60,8 @@ genSSL() {
     echo "    ssl_certificate     ../ssl/$KEY.crt;"
     echo "    ssl_certificate_key ../ssl/$KEY.key;"
     echo "}"
+
+    cd $N_PREFIX
   fi
 }
 
@@ -69,6 +74,14 @@ cat >$N_PREFIX/conf/nginx.conf<<EOF
       worker_connections  1024;
   }
   http {
+    upstream zuul_server {
+      server localhost:8401;
+      keepalive 50;
+    }
+    upstream ws_server{
+      server localhost:8901;
+      keepalive 50;
+    }
     include       mime.types;
     default_type  application/octet-stream;
     sendfile        on;
