@@ -15,7 +15,7 @@ PROJ="cecs"
 KEY="cecs"
 
 setFirewallPort() {
-  firewall-cmd --zone=public --add-port=443/tcp –permanent
+  firewall-cmd --zone=public --add-port=443/tcp --permanent
   systemctl restart firewalld.service
 }
 
