@@ -12,6 +12,42 @@ PROJ_URL="https://github.com/ob-cloud/cecs/releases/download/cecs-v1.0.2/release
 PROJ_FILE="release.tar.gz"
 PROJ="cecs"
 
+# Nginx base config
+setBaseNgCfg() {
+echo "\033[32m setting nginx config file \033[0m"
+cat >$N_PREFIX/conf/nginx.conf<<EOF
+  worker_processes  1;
+  events {
+      worker_connections  1024;
+  }
+  http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    include   vconfigs/*;
+  }
+EOF
+}
+# Set Front end Nginx config
+setFeNgCfg() {
+echo "\033[32m setting $PROJ nginx config file \033[0m"
+cat >$N_PREFIX/conf/vconfigs/$PROJ.nginx.conf<<EOF
+  server {
+    listen       80;
+    server_name  localhost;
+    location /$PROJ {
+        root  html;
+        index  index.html index.htm;
+    }
+  }
+EOF
+}
+
+# Set Back end Nginx config
+setBeNgCfg() {
+
+}
 # Set Nginx Config file
 setConfig() {
   echo "\033[32m Create directory： vconfigs & $PROJ \033[0m"
@@ -28,32 +64,11 @@ setConfig() {
   rm -f $PROJ_FILE
   cd $N_PREFIX
 
-echo "\033[32m setting nginx config file \033[0m"
-cat >$N_PREFIX/conf/nginx.conf<<EOF
-  worker_processes  1;
-  events {
-      worker_connections  1024;
-  }
-  http {
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
-    include   vconfigs/*;
-  }
-EOF
+setBaseNgCfg
 
-echo "\033[32m setting $PROJ nginx config file \033[0m"
-cat >$N_PREFIX/conf/vconfigs/$PROJ.nginx.conf<<EOF
-  server {
-    listen       80;
-    server_name  localhost;
-    location /$PROJ {
-        root  html;
-        index  index.html index.htm;
-    }
-  }
-EOF
+setFeNgCfg
+
+setBeNgCfg
 }
 
 # Check Nginx config file and reload
