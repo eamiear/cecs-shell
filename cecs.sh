@@ -160,9 +160,9 @@ setConfig() {
   rm -f $PROJ_FILE
   cd $N_PREFIX
 
-genSSL
+#genSSL
 
-setFirewallPort
+#setFirewallPort
 
 setBaseNgCfg
 
