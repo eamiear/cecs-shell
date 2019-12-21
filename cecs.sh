@@ -23,7 +23,7 @@ setfwport() {
   if chkport 443;then
     echo -e "\033[32m Port 443 already exists \033[0m"
   else
-    echo -e "\033[32m Port does not exsit \033[0m"
+    echo -e "\033[32m Port does not exsit, firewall is adding port... \033[0m"
     firewall-cmd --zone=public --add-port=443/tcp --permanent
     systemctl restart firewalld.service
   fi
